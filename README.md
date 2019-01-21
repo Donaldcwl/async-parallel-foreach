@@ -129,5 +129,5 @@ Please check the "example" folder in this repo
 git clone https://github.com/Donaldcwl/async-parallel-foreach.git
 cd async-parallel-foreach/example
 yarn install # or npm install
-node example
+node example.js
 ```
