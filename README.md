@@ -25,21 +25,21 @@ import { asyncParallelForEach, BACK_OFF_RETRY } from 'async-parallel-foreach'
 ### Main function ###
 #### asyncParallelForEach(coll: Collection, parallelLimit: number, iteratee: Function, eachMaxTry): Promise\<Array<{ value: any, error: Error }>> ####
 - coll - can be Array, Object (dictionary), Iterable
-- parallelLimit - number of iteratee functions to be executed in parallel at any time
+- parallelLimit - number of iteratee functions to be executed in parallel at any time, set `parallelLimit = -1` for unlimited parallelization (all items will start process at once)
 - iteratee - the function that you define to process each item in "coll"
 - eachMaxTry - maximum number of times each item will be processed by "iteratee".
-    - if eachMaxTry = 2, then the item will be retried 1 time when there is error throwed in the iteratee function
+    - if `eachMaxTry = 2`, then the item will be retried 1 time when there is error throwed in the iteratee function
     - add delay before retry
-        - set eachMaxTry = { times: 2, interval: 1000 } // wait for 1000 ms before retry
+        - set `eachMaxTry = { times: 2, interval: 1000 }` // wait for 1000 ms before retry
         - interval can also accept function returning the interval in ms
-            - e.g. eachMaxTry = { times: 2, interval: (retryCount) => retryCount * 1000 } // retryCount start from 2 which means it is the 2nd trial
+            - e.g. `eachMaxTry = { times: 2, interval: (retryCount) => retryCount * 1000 }` // retryCount start from 2 which means it is the 2nd trial
     - eachMaxTry follows the "opts" argument in [https://caolan.github.io/async/docs.html#retry](https://caolan.github.io/async/docs.html#retry) "retry" 
 ### BACK_OFF_RETRY strategies ###
 - predefined interval function you may use
 #### BACK_OFF_RETRY.randomBetween(minMs: number, maxMs: number) ####
 #### BACK_OFF_RETRY.exponential() ####
 - start from 100ms, then 200ms, 400ms, 800ms, 1600ms, ...
-- e.g. eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(100, 3000) } // random delay between 100ms and 3000ms
+- e.g. `eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(100, 3000) }` // random delay between 100ms and 3000ms
 
 ([details api document in here](http://htmlpreview.github.io/?https://github.com/Donaldcwl/async-parallel-foreach/blob/master/docs/index.html))
 
@@ -120,4 +120,14 @@ async function processFoods(foods) {
   
   return results
 }
+```
+
+## Example ##
+Please check the "example" folder in this repo
+- How to run the example:
+```bash
+git clone https://github.com/Donaldcwl/async-parallel-foreach.git
+cd async-parallel-foreach/example
+yarn install # or npm install
+node example
 ```
