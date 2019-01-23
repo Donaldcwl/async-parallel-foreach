@@ -1,6 +1,6 @@
 {
   "name": "async-parallel-foreach",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/types/index.d.ts",
@@ -12,13 +12,14 @@
     "watch": "rollup -cw rollup.config.ts",
     "test": "jest",
     "test:coverage": "npm run test -- --coverage",
+    "posttest:coverage": "npm run coverage-badges",
     "test:watch": "npm run test -- --watch",
     "test:watch:coverage": "npm run test:watch -- --coverage",
     "prebuild": "rimraf dist",
     "build": "rollup -c rollup.config.ts",
     "postbuild": "npm run docs",
     "coverage-badges": "make-coverage-badge",
-    "prepublish": "npm run test:coverage && npm run coverage-badges && npm run build",
+    "prepublish": "npm run test:coverage && npm run build",
     "docs": "typedoc --out docs --target es6 --theme minimal --mode file src"
   },
   "files": [

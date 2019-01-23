@@ -6,7 +6,7 @@ function sleep (ms) {
   return new Promise(resolve => setTimeout(() => resolve(), ms))
 }
 
-async function runCollIsArray (coll, parallelLimit, sleepMs = 0, errorOnIndex = []) {
+async function runCollIsArray (coll: Array<any>, parallelLimit, sleepMs = 0, errorOnIndex = []) {
   const startTime = Date.now()
   const result = await asyncParallelForEach(
     coll,
@@ -43,7 +43,7 @@ async function runCollIsArray (coll, parallelLimit, sleepMs = 0, errorOnIndex = 
   return [result, timeElapsed]
 }
 
-async function runCollIsObject (coll, parallelLimit, sleepMs = 0, errorOnKey = []) {
+async function runCollIsObject<T> (coll: {[key: string]: T}, parallelLimit, sleepMs = 0, errorOnKey = []) {
   const startTime = Date.now()
   const result = await asyncParallelForEach(
     coll,
@@ -64,6 +64,14 @@ async function runCollIsObject (coll, parallelLimit, sleepMs = 0, errorOnKey = [
 
 describe('Without error', () => {
   describe('Unlimited Parallel mode', () => {
+    it('works if parallelLimit uses default value', async () => {
+      const coll = ['a', 'b', 'c']
+      const sleepMs = 500
+      const [result, timeElapsed] = await runCollIsArray(coll, undefined, sleepMs)
+      expect(timeElapsed).toBeGreaterThanOrEqual(sleepMs)
+      expect(timeElapsed).toBeLessThanOrEqual(sleepMs + TIMER_DELAY)
+    })
+
     it('works if coll is Array', async () => {
       const coll = ['a', 'b', 'c']
       const sleepMs = 500
@@ -377,12 +385,16 @@ describe('With error', () => {
     })
 
     it('works if retry with exponential delay, Sequential mode, all retries failed', async () => {
-      jest.setTimeout(1000 * 10)
       const coll = ['a', 'b']
       const sleepMs = 500
       const eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.exponential() }
       const parallelLimit = 1
       const errorOnIndex = [0]
+
+      const totalDelayed = (100 + 200 + 400 + 800) * errorOnIndex.length
+      const expectedTimeElapsed = (coll.length - errorOnIndex.length) * sleepMs + errorOnIndex.length * eachMaxTry.times * sleepMs
+      jest.setTimeout(expectedTimeElapsed + totalDelayed + TIMER_DELAY + TIMER_DELAY)
+
       const ineratee = jest.fn(async function (item, index) {
         sleepMs > 0 && await sleep(sleepMs)
         // @ts-ignore
@@ -403,20 +415,23 @@ describe('With error', () => {
       // correct number of function executions with reties
       expect(ineratee).toHaveBeenCalledTimes(coll.length - errorOnIndex.length + errorOnIndex.length * eachMaxTry.times)
 
-      const totalDelayed = (100 + 200 + 400 + 800) * errorOnIndex.length
-      const expectedTimeElapsed = (coll.length - errorOnIndex.length) * sleepMs + errorOnIndex.length * eachMaxTry.times * sleepMs
       expect(timeElapsed).toBeGreaterThanOrEqual(expectedTimeElapsed + totalDelayed)
       expect(timeElapsed).toBeLessThanOrEqual(expectedTimeElapsed + totalDelayed + TIMER_DELAY)
     })
 
     it('works if retry with random delay, Sequential mode, all retries failed', async () => {
-      jest.setTimeout(1000 * 10)
       const coll = ['a', 'b']
       const sleepMs = 500
       const [minDelayMs, maxDelayMs] = [100, 3000]
       const eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(minDelayMs, maxDelayMs) }
       const parallelLimit = 1
       const errorOnIndex = [0]
+
+      const minTotalDelayed = eachMaxTry.times * minDelayMs * errorOnIndex.length
+      const maxTotalDelayed = eachMaxTry.times * maxDelayMs * errorOnIndex.length
+      const expectedTimeElapsed = (coll.length - errorOnIndex.length) * sleepMs + errorOnIndex.length * eachMaxTry.times * sleepMs
+      jest.setTimeout(expectedTimeElapsed + maxTotalDelayed + TIMER_DELAY + maxTotalDelayed)
+
       const ineratee = jest.fn(async function (item, index) {
         sleepMs > 0 && await sleep(sleepMs)
         // @ts-ignore
@@ -437,9 +452,6 @@ describe('With error', () => {
       // correct number of function executions with reties
       expect(ineratee).toHaveBeenCalledTimes(coll.length - errorOnIndex.length + errorOnIndex.length * eachMaxTry.times)
 
-      const minTotalDelayed = eachMaxTry.times * minDelayMs * errorOnIndex.length
-      const maxTotalDelayed = eachMaxTry.times * maxDelayMs * errorOnIndex.length
-      const expectedTimeElapsed = (coll.length - errorOnIndex.length) * sleepMs + errorOnIndex.length * eachMaxTry.times * sleepMs
       expect(timeElapsed).toBeGreaterThanOrEqual(expectedTimeElapsed + minTotalDelayed)
       expect(timeElapsed).toBeLessThanOrEqual(expectedTimeElapsed + maxTotalDelayed + TIMER_DELAY)
     })

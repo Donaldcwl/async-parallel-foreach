@@ -909,8 +909,17 @@ img { max-width: 100%; }
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
+		<li class=" tsd-kind-class">
+			<a href="classes/taskstate.html" class="tsd-kind-icon">Task<wbr>State</a>
+		</li>
+		<li class=" tsd-kind-type-alias tsd-is-not-exported">
+			<a href="globals.html#intervalfn" class="tsd-kind-icon">Interval<wbr>Fn</a>
+		</li>
 		<li class=" tsd-kind-function tsd-has-type-parameter">
 			<a href="globals.html#asyncparallelforeach" class="tsd-kind-icon">async<wbr>Parallel<wbr>For<wbr>Each</a>
+		</li>
+		<li class=" tsd-kind-function">
+			<a href="globals.html#sleep" class="tsd-kind-icon">sleep</a>
 		</li>
 	</ul>
 </nav>
@@ -919,55 +928,91 @@ img { max-width: 100%; }
 		<div class="tsd-panel tsd-typography">
 			<h1 id="async-parallel-foreach">Async parallel forEach</h1>
 			<p><a href="https://www.npmjs.com/package/async-parallel-foreach"><img src="https://img.shields.io/npm/v/async-parallel-foreach.svg" alt="npm"></a>
-				<a href="https://www.npmjs.com/package/async-parallel-foreach"><img src="./coverage/badge.svg" alt="npm"></a>
-			<a href="https://www.npmjs.com/package/async-parallel-foreach"><img src="https://img.shields.io/npm/l/async-parallel-foreach.svg" alt="npm"></a></p>
-			<p>Javascript module to perform <strong><em>async flow control</em></strong> on collection/iterable/dictionary <strong><em>in parallel</em></strong> and make <strong><em>retry easily</em></strong> when error occurred</p>
+				<a href="https://github.com/Donaldcwl/async-parallel-foreach"><img src="./coverage/badge.svg" alt="npm"></a>
+			<a href="https://github.com/Donaldcwl/async-parallel-foreach"><img src="https://img.shields.io/npm/l/async-parallel-foreach.svg" alt="npm"></a></p>
+			<p>Javascript module to perform <strong><em>async flow control</em></strong> on collection/iterable/dictionary <strong><em>in controlled parallel</em></strong> and make <strong><em>retry easily</em></strong> when error occurred</p>
+			<h2 id="features">Features</h2>
+			<ul>
+				<li>iterate collection (array/object/iterator) and <strong><em>run async function on each item</em></strong> in a collection</li>
+				<li>control the <strong><em>concurrency</em></strong> of running async function on the items</li>
+				<li><strong><em>auto retry</em></strong> when error occurred</li>
+				<li><strong><em>delayed retry</em></strong></li>
+			</ul>
 			<h2 id="install">Install</h2>
-			<pre><code>npm install <span class="hljs-keyword">async</span>-<span class="hljs-keyword">parallel</span>-foreach --save
-<span class="hljs-keyword">or</span>
-yarn <span class="hljs-keyword">add</span> <span class="hljs-keyword">async</span>-<span class="hljs-keyword">parallel</span>-foreach</code></pre><h2 id="how-to-use-this-module-in-your-project-">How to use this module in your project?</h2>
+			<pre><code class="language-bash">npm install async-parallel-foreach async --save
+or
+yarn add async-parallel-foreach async</code></pre>
+			<h2 id="how-to-use-this-module-in-your-project-">How to use this module in your project?</h2>
 			<p>Frontend: used in framework like React, Angular, Vue etc
 			(work with bundler like webpack and rollup)</p>
-			<p>Backend: node.js</p>
 			<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { asyncParallelForEach, BACK_OFF_RETRY } <span class="hljs-keyword">from</span> <span class="hljs-string">'async-parallel-foreach'</span></code></pre>
+			<p>Backend: node.js</p>
+			<pre><code class="language-javascript"><span class="hljs-keyword">const</span> { asyncParallelForEach, BACK_OFF_RETRY } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'async-parallel-foreach'</span>)</code></pre>
 			<h2 id="api">API</h2>
 			<h3 id="main-function">Main function</h3>
-			<h4 id="asyncparallelforeach-coll-collection-parallellimit-number-iteratee-function-eachmaxtry-promise-array-value-any-error-error-">asyncParallelForEach(coll: Collection, parallelLimit: number, iteratee: Function, eachMaxTry): Promise<Array&lt;{ value: any, error: Error }&gt;&gt;</h4>
+			<h4 id="asyncparallelforeach-coll-collection-parallellimit-number-iteratee-function-eachmaxtry-promise-array-value-any-error-error-">asyncParallelForEach(coll: Collection, parallelLimit: number, iteratee: Function[, eachMaxTry]): Promise<Array&lt;{ value: any, error: Error }&gt;&gt;</h4>
 					<ul>
 						<li>coll - can be Array, Object (dictionary), Iterable</li>
-						<li>parallelLimit - number of iteratee functions to be executed in parallel at any time</li>
-						<li>iteratee - the function that you define to process each item in &quot;coll&quot;</li>
-						<li>eachMaxTry - maximum number of times each item will be processed by &quot;iteratee&quot;.<ul>
-								<li>if eachMaxTry = 2, then the item will be retried 1 time when there is error throwed in the iteratee function</li>
-								<li>add delay before retry<ul>
-										<li>set eachMaxTry = { times: 2, interval: 1000 } // wait for 1000 ms before retry</li>
-										<li>interval can also accept function returning the interval in ms<ul>
-												<li>e.g. eachMaxTry = { times: 2, interval: (retryCount) =&gt; retryCount * 1000 } // retryCount start from 2 which means it is the 2nd trial</li>
+						<li>parallelLimit - number of iteratee functions to be executed in parallel at any time, set <code>parallelLimit = -1</code> for unlimited parallelization (all items will start process at once)</li>
+						<li>iteratee - the function that you define to process each item in &quot;coll&quot;<ul>
+								<li>if &quot;coll&quot; is array, it will call with (value, index, taskState) </li>
+								<li>if &quot;coll&quot; is object, it will call with (value, key, taskState)</li>
+								<li>&quot;taskState&quot; - corresponding to process an item<ul>
+										<li>attributes:<ul>
+												<li>currentTrial - the current trial, start from 1, up to eachMaxTry if any</li>
+												<li>failedReasons - array of error in previous trials (work with &quot;eachMaxTry&quot;)</li>
+											</ul>
+										</li>
+										<li>methods:<ul>
+												<li>timeElapsed() - the time elapsed since first trial</li>
+												<li>isFirstTrial() - is it the first time to process this item (work with &quot;eachMaxTry&quot;)</li>
+												<li>isLastTrial() - is it the last trial to process this item (work with &quot;eachMaxTry&quot;)</li>
+												<li>incrementMaxTry(incrementNumber) - increase the nubmer of max try for this task</li>
 											</ul>
 										</li>
 									</ul>
 								</li>
-								<li>eachMaxTry follows the &quot;opts&quot; argument in <a href="https://caolan.github.io/async/docs.html#retry">https://caolan.github.io/async/docs.html#retry</a> &quot;retry&quot; <h3 id="back_off_retry-strategies">BACK_OFF_RETRY strategies</h3>
+							</ul>
+						</li>
+						<li>eachMaxTry (optional) - maximum number of times each item will be processed by &quot;iteratee&quot; when error occurred. if omitted, each item will only processed once no matter error occurred or not.<ul>
+								<li>if <code>eachMaxTry = 2</code>, then the item will be retried 1 time when there is error throwed in the iteratee function</li>
+								<li>add delay before retry<ul>
+										<li>set <code>eachMaxTry = { times: 2, interval: 1000 }</code> // wait for 1000 ms before retry</li>
+										<li>interval can also accept function returning the interval in ms<ul>
+												<li>e.g. <code>eachMaxTry = { times: 2, interval: (retryCount) =&gt; retryCount * 1000 }</code> // retryCount start from 2 which means it is the 2nd trial</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>filter specific error to retry<ul>
+										<li>set <code>eachMaxTry = { times: 2, errorFilter: filterFn }</code></li>
+										<li>e.g. <code>const filterFn = function (error) { return error.message === &#39;some error message which may throw in your &quot;iteratee&quot; function and you want to retry it&#39; }</code></li>
+									</ul>
+								</li>
+								<li>all together<ul>
+										<li>e.g. <code>eachMaxTry = {times: 2, interval: 1000, errorFilter: filterFn }</code><h3 id="back_off_retry-strategies">BACK_OFF_RETRY strategies</h3>
+										</li>
+									</ul>
 								</li>
 							</ul>
 						</li>
 						<li>predefined interval function you may use<h4 id="back_off_retry-randombetween-minms-number-maxms-number-">BACK_OFF_RETRY.randomBetween(minMs: number, maxMs: number)</h4>
-							<h4 id="back_off_retry-exponential-">BACK_OFF_RETRY.exponential()</h4>
+						</li>
+						<li>e.g. <code>eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(100, 3000) }</code> // random delay between 100ms and 3000ms<h4 id="back_off_retry-exponential-">BACK_OFF_RETRY.exponential()</h4>
 						</li>
 						<li>start from 100ms, then 200ms, 400ms, 800ms, 1600ms, ...</li>
-						<li>e.g. eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(100, 3000) } // random delay between 100ms and 3000ms</li>
 					</ul>
 					<p>(<a href="http://htmlpreview.github.io/?https://github.com/Donaldcwl/async-parallel-foreach/blob/master/docs/index.html">details api document in here</a>)</p>
 					<h2 id="usage">Usage</h2>
 					<ul>
-						<li>Example 1
+						<li>Basic Example
 							<code>`</code>javascript
 						const imageUrls = [&#39;<a href="https://this-image-is-fine.jpg&#39;">https://this-image-is-fine.jpg&#39;</a>, &#39;<a href="https://this-image-does-exist-404.jpg&#39;">https://this-image-does-exist-404.jpg&#39;</a>, &#39;<a href="https://another-fine-image.jpg&#39;">https://another-fine-image.jpg&#39;</a>, /<em>......</em>/]</li>
 					</ul>
 					<p>processImages(imageUrls).then(successFn).catch(errorCallback)</p>
 					<p>async function processImages(imageUrls) {</p>
 					<p>  const parallelLimit = 5 // process at most 5 images simultaneously</p>
-					<p>  const results = await asyncParallelForEach(imageUrls, parallelLimit, async (imageUrl, index) =&gt; {</p>
+					<p>  const results = await asyncParallelForEach(imageUrls, parallelLimit, async (imageUrl, index, taskState) =&gt; {</p>
 					<pre><code><span class="hljs-keyword">const</span> filePath = <span class="hljs-keyword">await</span> downloadImage(imageUrl)
 
 <span class="hljs-keyword">const</span> convertedFilePath = <span class="hljs-keyword">await</span> covertImageFormat(filePath)
@@ -990,43 +1035,107 @@ yarn <span class="hljs-keyword">add</span> <span class="hljs-keyword">async</spa
 					// ]</p>
 					<p>  return results
 					}</p>
-					<pre><code>- Example <span class="hljs-number">2</span>
+					<pre><code>- Advanced Example
 ```javascript
-const foods = {
-  orange: [<span class="hljs-string">'anything1'</span>],
-  apple: <span class="hljs-string">'anything2'</span>,
-  banana: <span class="hljs-number">100</span>
-}
+const imageUrls = <span class="hljs-literal">['<span class="hljs-identifier">https</span>:<span class="hljs-operator">/</span><span class="hljs-operator">/</span><span class="hljs-identifier">this</span>-<span class="hljs-identifier">image</span>-<span class="hljs-identifier">is</span>-<span class="hljs-identifier">fine</span>.<span class="hljs-identifier">jpg</span>', '<span class="hljs-identifier">https</span>:<span class="hljs-operator">/</span><span class="hljs-operator">/</span><span class="hljs-identifier">this</span>-<span class="hljs-identifier">image</span>-<span class="hljs-identifier">does</span>-<span class="hljs-identifier">exist</span>-<span class="hljs-number">404.</span><span class="hljs-identifier">jpg</span>', '<span class="hljs-identifier">https</span>:<span class="hljs-operator">/</span><span class="hljs-operator">/</span><span class="hljs-identifier">another</span>-<span class="hljs-identifier">fine</span>-<span class="hljs-identifier">image</span>.<span class="hljs-identifier">jpg</span>', <span class="hljs-operator">/</span><span class="hljs-operator">*</span><span class="hljs-operator">...</span><span class="hljs-operator">...</span><span class="hljs-operator">*</span><span class="hljs-operator">/</span>]</span>
 
-processFoods(foods).<span class="hljs-keyword">then</span>(successFn).catch(errorCallback)
+process<span class="hljs-constructor">Images(<span class="hljs-params">imageUrls</span>)</span>.<span class="hljs-keyword">then</span>(successFn).catch(errorCallback)
 
-async <span class="hljs-keyword">function</span> processFoods(foods) {
+async <span class="hljs-keyword">function</span> process<span class="hljs-constructor">Images(<span class="hljs-params">imageUrls</span>)</span> {
 
-  const parallelLimit = <span class="hljs-number">2</span> // process at most <span class="hljs-number">2</span> food simultaneously
+  const parallelLimit = <span class="hljs-number">5</span> <span class="hljs-comment">// process at most 5 images simultaneously</span>
+  const maxTryTimes = <span class="hljs-number">10</span>
 
-  const results = await asyncParallelForEach(foods, parallelLimit, async (<span class="hljs-keyword">value</span>, foodName) =&gt; {
+  const results = await async<span class="hljs-constructor">ParallelForEach(<span class="hljs-params">imageUrls</span>, <span class="hljs-params">parallelLimit</span>, <span class="hljs-params">async</span> (<span class="hljs-params">imageUrl</span>, <span class="hljs-params">index</span>, <span class="hljs-params">taskState</span>)</span> =&gt; {
 
-    // <span class="hljs-keyword">if</span> foodName === <span class="hljs-string">'orange'</span>, <span class="hljs-keyword">then</span> <span class="hljs-keyword">value</span> will be [<span class="hljs-string">'anything1'</span>]
-    // <span class="hljs-keyword">if</span> foodName === <span class="hljs-string">'apple'</span>, <span class="hljs-keyword">then</span> <span class="hljs-keyword">value</span> will be <span class="hljs-string">'anything2'</span>
-    // <span class="hljs-keyword">if</span> foodName === <span class="hljs-string">'banana'</span>, <span class="hljs-keyword">then</span> <span class="hljs-keyword">value</span> will be <span class="hljs-number">100</span>
+    <span class="hljs-keyword">if</span> (taskState.is<span class="hljs-constructor">LastTrial()</span>) {
+      <span class="hljs-keyword">if</span> (it<span class="hljs-constructor">IsWorthAnExtryTrial()</span>) {
+        taskState.increment<span class="hljs-constructor">MaxTry(1)</span>
+      } <span class="hljs-keyword">else</span> {
+          <span class="hljs-comment">// since maxTryTimes is 10, we have already tried 9 times, just set it to default image as a last resort</span>
+          <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Logger</span>.</span></span>error({ imageUrl, failedReasons: taskState.failedReasons }) 
+          return defaultImageUrl
+      }
+    }
 
-    const someResult = await someAsyncOperation(<span class="hljs-keyword">value</span>)
+    <span class="hljs-keyword">if</span> (taskState.time<span class="hljs-constructor">Elapsed()</span> &gt; <span class="hljs-number">60</span><span class="hljs-operator"> * </span><span class="hljs-number">1000</span>) { <span class="hljs-comment">// since this item has been processed for 60 second, since its first trial</span>
+      <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Logger</span>.</span></span>error({ imageUrl, failedReasons: <span class="hljs-literal">[<span class="hljs-operator">...</span><span class="hljs-identifier">taskState</span>.<span class="hljs-identifier">failedReasons</span>, <span class="hljs-identifier">new</span> E<span class="hljs-identifier">rror</span>('<span class="hljs-identifier">timeout</span>')]</span> }) 
+      return defaultImageUrl
+    }
 
-    <span class="hljs-keyword">return</span> someResult
+    <span class="hljs-keyword">if</span> (taskState.currentTrial<span class="hljs-operator"> === </span><span class="hljs-number">2</span>) { <span class="hljs-comment">// for the second trial, try to download from another CDN (may be)</span>
+      imageUrls = imageUrls.replace('&lt;original domain&gt;', '&lt;<span class="hljs-keyword">new</span> cdn domain&gt;')
+    }
+
+    const filePath = await download<span class="hljs-constructor">Image(<span class="hljs-params">imageUrl</span>)</span>
+
+    const convertedFilePath = await covert<span class="hljs-constructor">ImageFormat(<span class="hljs-params">filePath</span>)</span>
+
+    const compressFilePath = await compress<span class="hljs-constructor">Image(<span class="hljs-params">convertedFilePath</span>)</span>
+
+    const s3ImageUrl = await upload<span class="hljs-constructor">ToS3(<span class="hljs-params">compressFilePath</span>)</span>
+
+    <span class="hljs-comment">// above operations may fails (throw Error) for any reason e.g. Network connection problem, image corruption, etc</span>
+
+    return s3ImageUrl
 
   }, { 
-    times: <span class="hljs-number">3</span>,  // try at most <span class="hljs-number">3</span> times
-    <span class="hljs-type">interval</span>: BACK_OFF_RETRY.randomBetween(<span class="hljs-number">100</span>, <span class="hljs-number">3000</span>)
+    times: maxTryTimes,  <span class="hljs-comment">// try at most 10 times</span>
+    interval: <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">BACK_OFF_RETRY</span>.</span></span>exponential<span class="hljs-literal">()</span>
   })
 
-  // results <span class="hljs-keyword">is</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">format</span> {
-  //   orange: {<span class="hljs-keyword">value</span>: <span class="hljs-string">'&lt;someResult&gt;'</span> },
-  //   apple: {<span class="hljs-keyword">value</span>: <span class="hljs-string">'&lt;someResult&gt;'</span> },
-  //   banana: {error: <span class="hljs-built_in">new</span> Error(<span class="hljs-string">'some error if any'</span>)}
-  // }
+  <span class="hljs-comment">// results is in format [</span>
+  <span class="hljs-comment">//   {value: '&lt;the s3ImageUrl returned in the iteratee function corresponding to this-image-is-fine.jpg&gt;' },</span>
+  <span class="hljs-comment">//   {error: new Error('404 - Image not found')},</span>
+  <span class="hljs-comment">//   {value: '&lt;the s3ImageUrl returned in the iteratee function corresponding to another-fine-image.jpg&gt;' },</span>
+  <span class="hljs-comment">//   ......</span>
+  <span class="hljs-comment">// ]</span>
 
-  <span class="hljs-keyword">return</span> results
-}</code></pre>
+  return results
+}</code></pre><ul>
+						<li>Example 2
+							<code>`</code>javascript
+							const foods = {
+							orange: [&#39;anything1&#39;],
+							apple: &#39;anything2&#39;,
+							banana: 100
+						}</li>
+					</ul>
+					<p>processFoods(foods).then(successFn).catch(errorCallback)</p>
+					<p>async function processFoods(foods) {</p>
+					<p>  const parallelLimit = 2 // process at most 2 food simultaneously</p>
+					<p>  const results = await asyncParallelForEach(foods, parallelLimit, async (value, foodName, taskState) =&gt; {</p>
+					<pre><code>// <span class="hljs-keyword">if</span> foodName === <span class="hljs-string">'orange'</span>, <span class="hljs-keyword">then</span> <span class="hljs-keyword">value</span> will be [<span class="hljs-string">'anything1'</span>]
+// <span class="hljs-keyword">if</span> foodName === <span class="hljs-string">'apple'</span>, <span class="hljs-keyword">then</span> <span class="hljs-keyword">value</span> will be <span class="hljs-string">'anything2'</span>
+// <span class="hljs-keyword">if</span> foodName === <span class="hljs-string">'banana'</span>, <span class="hljs-keyword">then</span> <span class="hljs-keyword">value</span> will be <span class="hljs-number">100</span>
+
+const someResult = await someAsyncOperation(<span class="hljs-keyword">value</span>)
+
+<span class="hljs-keyword">return</span> someResult</code></pre><p>  }, { 
+						times: 3,  // try at most 3 times
+						interval: BACK_OFF_RETRY.randomBetween(100, 3000)
+					})</p>
+					<p>  // results is in format {
+						//   orange: {value: &#39;<someResult>&#39; },
+							//   apple: {value: &#39;<someResult>&#39; },
+								//   banana: {error: new Error(&#39;some error if any&#39;)}
+					// }</p>
+					<p>  return results
+					}</p>
+					<pre><code>
+## Example ##
+Please check the <span class="hljs-string">"example"</span> folder <span class="hljs-keyword">in</span> this repo
+- How to run the example:
+```bash
+git clone https:<span class="hljs-comment">//github.com/Donaldcwl/async-parallel-foreach.git</span>
+cd async-parallel-foreach/example
+yarn install # or npm install
+node example.js</code></pre><h3 id="todo-features">TODO FEATURES</h3>
+					<ul>
+						<li>get current status in the iteratee function e.g. currentTrial, isFirstTrial, isLastTrial, timeElapsed, failedReasons, incrementMaxTry</li>
+						<li>eachTrialTimeout, eachItemTimeout</li>
+						<li>run iteratee function in web worker for CPU intensive tasks (use tiny-worker for node.js)</li>
+					</ul>
 		</div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
@@ -1039,11 +1148,58 @@ async <span class="hljs-keyword">function</span> processFoods(foods) {
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
+						<h3>Classes</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-class"><a href="classes/taskstate.html" class="tsd-kind-icon">Task<wbr>State</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section tsd-is-not-exported">
+						<h3>Type aliases</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-type-alias tsd-is-not-exported"><a href="globals.html#intervalfn" class="tsd-kind-icon">Interval<wbr>Fn</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
 						<h3>Functions</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-function tsd-has-type-parameter"><a href="globals.html#asyncparallelforeach" class="tsd-kind-icon">async<wbr>Parallel<wbr>For<wbr>Each</a></li>
+							<li class="tsd-kind-function"><a href="globals.html#sleep" class="tsd-kind-icon">sleep</a></li>
 						</ul>
 					</section>
+				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+			<h2>Type aliases</h2>
+			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-not-exported">
+				<a name="intervalfn" class="tsd-anchor"></a>
+				<h3>Interval<wbr>Fn</h3>
+				<div class="tsd-signature tsd-kind-icon">Interval<wbr>Fn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L1">TaskState.ts:1</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-type-declaration">
+					<h4>Type declaration</h4>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-siganture">
+							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-is-not-exported">
+								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>retryCount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+							</ul>
+							<ul class="tsd-descriptions">
+								<li class="tsd-description">
+									<h4 class="tsd-parameters-title">Parameters</h4>
+									<ul class="tsd-parameters">
+										<li>
+											<h5>retryCount: <span class="tsd-signature-type">number</span></h5>
+										</li>
+									</ul>
+									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+								</li>
+							</ul>
+						</li>
+					</ul>
 				</div>
 			</section>
 		</section>
@@ -1053,13 +1209,13 @@ async <span class="hljs-keyword">function</span> processFoods(foods) {
 				<a name="asyncparallelforeach" class="tsd-anchor"></a>
 				<h3>async<wbr>Parallel<wbr>For<wbr>Each</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-					<li class="tsd-signature tsd-kind-icon">async<wbr>Parallel<wbr>For<wbr>Each&lt;T&gt;<span class="tsd-signature-symbol">(</span>coll<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableCollection</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, parallelLimit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, iteratee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, eachMaxTry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">async<wbr>Parallel<wbr>For<wbr>Each&lt;T, C&gt;<span class="tsd-signature-symbol">(</span>coll<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">C</span>, parallelLimit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span>, iteratee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, eachMaxTry<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C extends T[] ? { value: any; error: Error; }[] : { [key: string]: { value: any; error: Error; }; }</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/358bd6c/src/async-parallel-foreach.ts#L3">async-parallel-foreach.ts:3</a></li>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/async-parallel-foreach.ts#L5">async-parallel-foreach.ts:5</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1067,11 +1223,14 @@ async <span class="hljs-keyword">function</span> processFoods(foods) {
 							<li>
 								<h4>T</h4>
 							</li>
+							<li>
+								<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h4>
+							</li>
 						</ul>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>coll: <span class="tsd-signature-type">IterableCollection</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>coll: <span class="tsd-signature-type">C</span></h5>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> parallelLimit: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></h5>
@@ -1081,7 +1240,7 @@ async <span class="hljs-keyword">function</span> processFoods(foods) {
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter-siganture">
 										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span>, taskState<span class="tsd-signature-symbol">: </span><a href="classes/taskstate.html" class="tsd-signature-type">TaskState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 										</ul>
 										<ul class="tsd-descriptions">
 											<li class="tsd-description">
@@ -1091,7 +1250,10 @@ async <span class="hljs-keyword">function</span> processFoods(foods) {
 														<h5>item: <span class="tsd-signature-type">T</span></h5>
 													</li>
 													<li>
-														<h5>index: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span></h5>
+														<h5>index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">any</span></h5>
+													</li>
+													<li>
+														<h5>taskState: <a href="classes/taskstate.html" class="tsd-signature-type">TaskState</a></h5>
 													</li>
 												</ul>
 												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1101,10 +1263,33 @@ async <span class="hljs-keyword">function</span> processFoods(foods) {
 								</ul>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> eachMaxTry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{ times: 1, interval: 0 }</span></h5>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> eachMaxTry: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;{times: 1,interval: 0}</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C extends T[] ? { value: any; error: Error; }[] : { [key: string]: { value: any; error: Error; }; }</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function">
+				<a name="sleep" class="tsd-anchor"></a>
+				<h3>sleep</h3>
+				<ul class="tsd-signatures tsd-kind-function">
+					<li class="tsd-signature tsd-kind-icon">sleep<span class="tsd-signature-symbol">(</span>ms<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/utils.ts#L1">utils.ts:1</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>ms: <span class="tsd-signature-type">any</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
 					</li>
 				</ul>
 			</section>

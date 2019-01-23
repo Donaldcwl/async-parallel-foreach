@@ -1,44 +1,68 @@
-import { eachOfLimit, IterableCollection, retry } from 'async'
+import { eachOfLimit } from 'async'
+import TaskState from './TaskState'
+import { sleep } from './utils'
 
-export function asyncParallelForEach<T> (
-  coll: IterableCollection<T>,
-  parallelLimit: number = 1,
-  iteratee: (item: T, index: number | string | any) => Promise<any>,
-  eachMaxTry: number | { times: number, interval: number | ((retryCount: number) => number) } = { times: 1, interval: 0 }
-): Promise<Array<{ value: any, error: Error }>> {
+export function asyncParallelForEach<T, C extends T[] | IterableIterator<T> | { [key: string]: T }> (
+  coll: C,
+  parallelLimit: number = -1,
+  iteratee: (item: T, index: string | number | any, taskState: TaskState) => Promise<any>,
+  eachMaxTry: number | { times: number, interval?: number | ((retryCount: number) => number), errorFilter?: (error: Error) => boolean } = {
+    times: 1,
+    interval: 0
+  }
+): Promise<C extends T[] ? Array<{ value: any, error: Error }> : { [key: string]: { value: any, error: Error } }> {
   return new Promise((resolve) => {
+
     const collLength = Array.isArray(coll) ? coll.length : Object.keys(coll).length
+
     if (parallelLimit === -1) {
       parallelLimit = collLength
     }
+
     const results: any = Array.isArray(coll) ? [] : {}
+
     let doneCnt = 0
+
     eachOfLimit(
       coll,
       parallelLimit,
-      (item, index, callback) => {
-        retry(
-          eachMaxTry,
-          (callback) => {
-            Promise.resolve(iteratee(item, index))
-              .then((...args) => callback(null, ...args))
-              .catch(callback)
-          },
-          (err, result) => {
-            if (err) {
-              results[index] = { error: err }
+      async (item, index, callback) => {
+
+        const taskState = new TaskState({ maxTry: eachMaxTry })
+
+        let done = false
+        let value
+        let error
+        while (!done) {
+          taskState._try()
+          try {
+            value = await Promise.resolve(iteratee(item, index, taskState))
+            done = true
+          } catch (err) {
+            taskState._gotError(err)
+            if (taskState._shouldRetry(err)) {
+              await sleep(taskState._getDelayInterval())
             } else {
-              results[index] = { value: result }
+              error = err
+              done = true
             }
-            doneCnt++
-            if (doneCnt === collLength) { // end
-              resolve(results)
-            }
-            callback()
           }
-        )
+        }
+        taskState._finish()
+
+        if (typeof error === 'undefined') {
+          results[index] = { value }
+        } else {
+          results[index] = { error }
+        }
+        callback()
+        doneCnt++
+        if (doneCnt === collLength) { // end
+          resolve(results)
+        }
       }
     )
+
   })
 }
 

@@ -1,15 +1,16 @@
 module.exports = {
   transform: {
-    '.(ts|tsx)': '<rootDir>/node_modules/ts-jest/preprocessor.js'
+    '.(ts|tsx)': 'ts-jest'
   },
   testEnvironment: 'node',
-  testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
+  // testPathIgnorePatterns: ['async-parallel-foreach.e2e.ts'],
+  testRegex: '(/__tests__/.*|\\.(test|spec|e2e))\\.(ts|tsx|js)$',
   moduleFileExtensions: [
     'ts',
     'tsx',
     'js'
   ],
-  "coverageReporters": ["json-summary", "json", "lcov", "text", "clover"],
+  coverageReporters: ["json-summary", "json", "lcov", "text", "clover"],
   coveragePathIgnorePatterns: [
     '/node_modules/',
     '/test/'
@@ -23,6 +24,6 @@ module.exports = {
     }
   },
   collectCoverageFrom: [
-    'src/*.{js,ts}'
+    'src/**/*.{js,ts}'
   ]
 }

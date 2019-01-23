@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BACK_OFF_RETRY | async-parallel-foreach</title>
+	<title>TaskState | async-parallel-foreach</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -909,72 +909,404 @@ img { max-width: 100%; }
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
-		<li class=" tsd-kind-function tsd-parent-kind-module">
-			<a href="back_off_retry.html#exponential" class="tsd-kind-icon">exponential</a>
+		<li class="current tsd-kind-class">
+			<a href="taskstate.html" class="tsd-kind-icon">Task<wbr>State</a>
+			<ul>
+				<li class=" tsd-kind-constructor tsd-parent-kind-class">
+					<a href="taskstate.html#constructor" class="tsd-kind-icon">constructor</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="taskstate.html#currenttrial" class="tsd-kind-icon">current<wbr>Trial</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="taskstate.html#failedreasons" class="tsd-kind-icon">failed<wbr>Reasons</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="taskstate.html#finished" class="tsd-kind-icon">finished</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a href="taskstate.html#interval" class="tsd-kind-icon">interval</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a href="taskstate.html#maxtry" class="tsd-kind-icon">max<wbr>Try</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a href="taskstate.html#starttime" class="tsd-kind-icon">start<wbr>Time</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#_finish" class="tsd-kind-icon">_finish</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#_getdelayinterval" class="tsd-kind-icon">_get<wbr>Delay<wbr>Interval</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#_goterror" class="tsd-kind-icon">_got<wbr>Error</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#_shouldretry" class="tsd-kind-icon">_should<wbr>Retry</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#_try" class="tsd-kind-icon">_try</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="taskstate.html#errorfilter" class="tsd-kind-icon">error<wbr>Filter</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#incrementmaxtry" class="tsd-kind-icon">increment<wbr>Max<wbr>Try</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#isfirsttrial" class="tsd-kind-icon">is<wbr>First<wbr>Trial</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#islasttrial" class="tsd-kind-icon">is<wbr>Last<wbr>Trial</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="taskstate.html#timeelapsed" class="tsd-kind-icon">time<wbr>Elapsed</a>
+				</li>
+			</ul>
 		</li>
-		<li class=" tsd-kind-function tsd-parent-kind-module">
-			<a href="back_off_retry.html#randombetween" class="tsd-kind-icon">random<wbr>Between</a>
+		<li class=" tsd-kind-type-alias tsd-is-not-exported">
+			<a href="../globals.html#intervalfn" class="tsd-kind-icon">Interval<wbr>Fn</a>
+		</li>
+		<li class=" tsd-kind-function tsd-has-type-parameter">
+			<a href="../globals.html#asyncparallelforeach" class="tsd-kind-icon">async<wbr>Parallel<wbr>For<wbr>Each</a>
+		</li>
+		<li class=" tsd-kind-function">
+			<a href="../globals.html#sleep" class="tsd-kind-icon">sleep</a>
 		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">TaskState</span>
+				</li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Functions</h3>
+						<h3>Constructors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-function tsd-parent-kind-module"><a href="back_off_retry.html#exponential" class="tsd-kind-icon">exponential</a></li>
-							<li class="tsd-kind-function tsd-parent-kind-module"><a href="back_off_retry.html#randombetween" class="tsd-kind-icon">random<wbr>Between</a></li>
+							<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="taskstate.html#constructor" class="tsd-kind-icon">constructor</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
+						<h3>Properties</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="taskstate.html#currenttrial" class="tsd-kind-icon">current<wbr>Trial</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="taskstate.html#failedreasons" class="tsd-kind-icon">failed<wbr>Reasons</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="taskstate.html#finished" class="tsd-kind-icon">finished</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskstate.html#interval" class="tsd-kind-icon">interval</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskstate.html#maxtry" class="tsd-kind-icon">max<wbr>Try</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskstate.html#starttime" class="tsd-kind-icon">start<wbr>Time</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
+						<h3>Methods</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#_finish" class="tsd-kind-icon">_finish</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#_getdelayinterval" class="tsd-kind-icon">_get<wbr>Delay<wbr>Interval</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#_goterror" class="tsd-kind-icon">_got<wbr>Error</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#_shouldretry" class="tsd-kind-icon">_should<wbr>Retry</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#_try" class="tsd-kind-icon">_try</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="taskstate.html#errorfilter" class="tsd-kind-icon">error<wbr>Filter</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#incrementmaxtry" class="tsd-kind-icon">increment<wbr>Max<wbr>Try</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#isfirsttrial" class="tsd-kind-icon">is<wbr>First<wbr>Trial</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#islasttrial" class="tsd-kind-icon">is<wbr>Last<wbr>Trial</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="taskstate.html#timeelapsed" class="tsd-kind-icon">time<wbr>Elapsed</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
-			<h2>Functions</h2>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-				<a name="exponential" class="tsd-anchor"></a>
-				<h3>exponential</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">exponential<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">exponentialBackoff</span></li>
+			<h2>Constructors</h2>
+			<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+				<a name="constructor" class="tsd-anchor"></a>
+				<h3>constructor</h3>
+				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Task<wbr>State<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="taskstate.html" class="tsd-signature-type">TaskState</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/async-parallel-foreach.ts#L76">async-parallel-foreach.ts:76</a></li>
-							</ul>
-						</aside>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">exponentialBackoff</span></h4>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-				<a name="randombetween" class="tsd-anchor"></a>
-				<h3>random<wbr>Between</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">random<wbr>Between<span class="tsd-signature-symbol">(</span>minMs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, maxMs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">randomBackoff</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/async-parallel-foreach.ts#L70">async-parallel-foreach.ts:70</a></li>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L3">TaskState.ts:3</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>minMs: <span class="tsd-signature-type">number</span></h5>
-							</li>
-							<li>
-								<h5>maxMs: <span class="tsd-signature-type">number</span></h5>
+								<h5>props: <span class="tsd-signature-type">any</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">randomBackoff</span></h4>
+						<h4 class="tsd-returns-title">Returns <a href="taskstate.html" class="tsd-signature-type">TaskState</a></h4>
+					</li>
+				</ul>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="currenttrial" class="tsd-anchor"></a>
+				<h3>current<wbr>Trial</h3>
+				<div class="tsd-signature tsd-kind-icon">current<wbr>Trial<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L26">TaskState.ts:26</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="failedreasons" class="tsd-anchor"></a>
+				<h3>failed<wbr>Reasons</h3>
+				<div class="tsd-signature tsd-kind-icon">failed<wbr>Reasons<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Error</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L28">TaskState.ts:28</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="finished" class="tsd-anchor"></a>
+				<h3>finished</h3>
+				<div class="tsd-signature tsd-kind-icon">finished<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L30">TaskState.ts:30</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<a name="interval" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> interval</h3>
+				<div class="tsd-signature tsd-kind-icon">interval<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="../globals.html#intervalfn" class="tsd-signature-type">IntervalFn</a><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L22">TaskState.ts:22</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<a name="maxtry" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> max<wbr>Try</h3>
+				<div class="tsd-signature tsd-kind-icon">max<wbr>Try<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L20">TaskState.ts:20</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<a name="starttime" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> start<wbr>Time</h3>
+				<div class="tsd-signature tsd-kind-icon">start<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;Date.now()</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L18">TaskState.ts:18</a></li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="_finish" class="tsd-anchor"></a>
+				<h3>_finish</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">_finish<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L68">TaskState.ts:68</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="_getdelayinterval" class="tsd-anchor"></a>
+				<h3>_get<wbr>Delay<wbr>Interval</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">_get<wbr>Delay<wbr>Interval<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L52">TaskState.ts:52</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Number</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="_goterror" class="tsd-anchor"></a>
+				<h3>_got<wbr>Error</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">_got<wbr>Error<span class="tsd-signature-symbol">(</span>err<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Error</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L64">TaskState.ts:64</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>err: <span class="tsd-signature-type">Error</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="_shouldretry" class="tsd-anchor"></a>
+				<h3>_should<wbr>Retry</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">_should<wbr>Retry<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Error</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L48">TaskState.ts:48</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>error: <span class="tsd-signature-type">Error</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Boolean</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="_try" class="tsd-anchor"></a>
+				<h3>_try</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">_try<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L60">TaskState.ts:60</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="errorfilter" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> error<wbr>Filter</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">error<wbr>Filter<span class="tsd-signature-symbol">(</span>_<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L24">TaskState.ts:24</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>_: <span class="tsd-signature-type">any</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="incrementmaxtry" class="tsd-anchor"></a>
+				<h3>increment<wbr>Max<wbr>Try</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">increment<wbr>Max<wbr>Try<span class="tsd-signature-symbol">(</span>increment<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L44">TaskState.ts:44</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> increment: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="isfirsttrial" class="tsd-anchor"></a>
+				<h3>is<wbr>First<wbr>Trial</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">is<wbr>First<wbr>Trial<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L32">TaskState.ts:32</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="islasttrial" class="tsd-anchor"></a>
+				<h3>is<wbr>Last<wbr>Trial</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">is<wbr>Last<wbr>Trial<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L36">TaskState.ts:36</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="timeelapsed" class="tsd-anchor"></a>
+				<h3>time<wbr>Elapsed</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">time<wbr>Elapsed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/TaskState.ts#L40">TaskState.ts:40</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 					</li>
 				</ul>
 			</section>
