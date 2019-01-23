@@ -216,6 +216,5 @@ node example.js
 ```
 
 ### TODO FEATURES ###
-- get current status in the iteratee function e.g. currentTrial, isFirstTrial, isLastTrial, timeElapsed, failedReasons, incrementMaxTry
 - eachTrialTimeout, eachItemTimeout
 - run iteratee function in web worker for CPU intensive tasks (use tiny-worker for node.js)
