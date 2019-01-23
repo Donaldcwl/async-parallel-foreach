@@ -121,7 +121,7 @@ async function processImages(imageUrls) {
   const results = await asyncParallelForEach(imageUrls, parallelLimit, async (imageUrl, index, taskState) => {
     
     if (taskState.isLastTrial()) {
-      if (itIsWorthAnExtryTrial()) {
+      if (itIsWorthAnExtraTrial()) {
         taskState.incrementMaxTry(1)
       } else {
           // since maxTryTimes is 10, we have already tried 9 times, just set it to default image as a last resort
