@@ -1,24 +1,33 @@
 # Async parallel forEach #
 [![npm](https://img.shields.io/npm/v/async-parallel-foreach.svg)](https://www.npmjs.com/package/async-parallel-foreach)
-[![npm](./coverage/badge.svg)](https://www.npmjs.com/package/async-parallel-foreach)
-[![npm](https://img.shields.io/npm/l/async-parallel-foreach.svg)](https://www.npmjs.com/package/async-parallel-foreach)
+[![npm](./coverage/badge.svg)](https://github.com/Donaldcwl/async-parallel-foreach)
+[![npm](https://img.shields.io/npm/l/async-parallel-foreach.svg)](https://github.com/Donaldcwl/async-parallel-foreach)
 
-Javascript module to perform ***async flow control*** on collection/iterable/dictionary ***in parallel*** and make ***retry easily*** when error occurred
+Javascript module to perform ***async flow control*** on collection/iterable/dictionary ***in controlled parallel*** and make ***retry easily*** when error occurred
+
+## Features ##
+- iterate collection (array/object/iterator) and ***run async function on each item*** in a collection
+- control the ***concurrency*** of running async function on the items
+- ***auto retry*** when error occurred
+- ***delayed retry***
 
 ## Install ##
-```
-npm install async-parallel-foreach --save
+```bash
+npm install async-parallel-foreach async --save
 or
-yarn add async-parallel-foreach
+yarn add async-parallel-foreach async
 ```
 
 ## How to use this module in your project? ##
 Frontend: used in framework like React, Angular, Vue etc
 (work with bundler like webpack and rollup)
+```javascript
+import { asyncParallelForEach, BACK_OFF_RETRY } from 'async-parallel-foreach'
+```
 
 Backend: node.js
 ```javascript
-import { asyncParallelForEach, BACK_OFF_RETRY } from 'async-parallel-foreach'
+const { asyncParallelForEach, BACK_OFF_RETRY } = require('async-parallel-foreach')
 ```
 
 ## API ##
@@ -27,19 +36,20 @@ import { asyncParallelForEach, BACK_OFF_RETRY } from 'async-parallel-foreach'
 - coll - can be Array, Object (dictionary), Iterable
 - parallelLimit - number of iteratee functions to be executed in parallel at any time, set `parallelLimit = -1` for unlimited parallelization (all items will start process at once)
 - iteratee - the function that you define to process each item in "coll"
+    - if "coll" is array, it will call with (value, index) 
+    - if "coll" is object, it will call with (value, key)
 - eachMaxTry - maximum number of times each item will be processed by "iteratee".
     - if `eachMaxTry = 2`, then the item will be retried 1 time when there is error throwed in the iteratee function
     - add delay before retry
         - set `eachMaxTry = { times: 2, interval: 1000 }` // wait for 1000 ms before retry
         - interval can also accept function returning the interval in ms
             - e.g. `eachMaxTry = { times: 2, interval: (retryCount) => retryCount * 1000 }` // retryCount start from 2 which means it is the 2nd trial
-    - eachMaxTry follows the "opts" argument in [https://caolan.github.io/async/docs.html#retry](https://caolan.github.io/async/docs.html#retry) "retry" 
 ### BACK_OFF_RETRY strategies ###
 - predefined interval function you may use
 #### BACK_OFF_RETRY.randomBetween(minMs: number, maxMs: number) ####
+- e.g. `eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(100, 3000) }` // random delay between 100ms and 3000ms
 #### BACK_OFF_RETRY.exponential() ####
 - start from 100ms, then 200ms, 400ms, 800ms, 1600ms, ...
-- e.g. `eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(100, 3000) }` // random delay between 100ms and 3000ms
 
 ([details api document in here](http://htmlpreview.github.io/?https://github.com/Donaldcwl/async-parallel-foreach/blob/master/docs/index.html))
 
@@ -131,3 +141,8 @@ cd async-parallel-foreach/example
 yarn install # or npm install
 node example.js
 ```
+
+### TODO FEATURES ###
+- get current status in the iteratee function e.g. currentTrial, isFirstTrial, isLastTrial, timeElapsed, failedReasons, incrementMaxTry
+- eachTrialTimeout, eachItemTimeout
+- run iteratee function in web worker for CPU intensive tasks (use tiny-worker for node.js)
