@@ -919,43 +919,55 @@ img { max-width: 100%; }
 		<div class="tsd-panel tsd-typography">
 			<h1 id="async-parallel-foreach">Async parallel forEach</h1>
 			<p><a href="https://www.npmjs.com/package/async-parallel-foreach"><img src="https://img.shields.io/npm/v/async-parallel-foreach.svg" alt="npm"></a>
-				<a href="https://www.npmjs.com/package/async-parallel-foreach"><img src="./coverage/badge.svg" alt="npm"></a>
-			<a href="https://www.npmjs.com/package/async-parallel-foreach"><img src="https://img.shields.io/npm/l/async-parallel-foreach.svg" alt="npm"></a></p>
-			<p>Javascript module to perform <strong><em>async flow control</em></strong> on collection/iterable/dictionary <strong><em>in parallel</em></strong> and make <strong><em>retry easily</em></strong> when error occurred</p>
+				<a href="https://github.com/Donaldcwl/async-parallel-foreach"><img src="./coverage/badge.svg" alt="npm"></a>
+			<a href="https://github.com/Donaldcwl/async-parallel-foreach"><img src="https://img.shields.io/npm/l/async-parallel-foreach.svg" alt="npm"></a></p>
+			<p>Javascript module to perform <strong><em>async flow control</em></strong> on collection/iterable/dictionary <strong><em>in controlled parallel</em></strong> and make <strong><em>retry easily</em></strong> when error occurred</p>
+			<h2 id="features">Features</h2>
+			<ul>
+				<li>iterate collection (array/object/iterator) and <strong><em>run async function on each item</em></strong> in a collection</li>
+				<li>control the <strong><em>concurrency</em></strong> of running async function on the items</li>
+				<li><strong><em>auto retry</em></strong> when error occurred</li>
+				<li><strong><em>delayed retry</em></strong></li>
+			</ul>
 			<h2 id="install">Install</h2>
-			<pre><code>npm install <span class="hljs-keyword">async</span>-<span class="hljs-keyword">parallel</span>-foreach --save
-<span class="hljs-keyword">or</span>
-yarn <span class="hljs-keyword">add</span> <span class="hljs-keyword">async</span>-<span class="hljs-keyword">parallel</span>-foreach</code></pre><h2 id="how-to-use-this-module-in-your-project-">How to use this module in your project?</h2>
+			<pre><code class="language-bash">npm install async-parallel-foreach async --save
+or
+yarn add async-parallel-foreach async</code></pre>
+			<h2 id="how-to-use-this-module-in-your-project-">How to use this module in your project?</h2>
 			<p>Frontend: used in framework like React, Angular, Vue etc
 			(work with bundler like webpack and rollup)</p>
-			<p>Backend: node.js</p>
 			<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { asyncParallelForEach, BACK_OFF_RETRY } <span class="hljs-keyword">from</span> <span class="hljs-string">'async-parallel-foreach'</span></code></pre>
+			<p>Backend: node.js</p>
+			<pre><code class="language-javascript"><span class="hljs-keyword">const</span> { asyncParallelForEach, BACK_OFF_RETRY } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'async-parallel-foreach'</span>)</code></pre>
 			<h2 id="api">API</h2>
 			<h3 id="main-function">Main function</h3>
 			<h4 id="asyncparallelforeach-coll-collection-parallellimit-number-iteratee-function-eachmaxtry-promise-array-value-any-error-error-">asyncParallelForEach(coll: Collection, parallelLimit: number, iteratee: Function, eachMaxTry): Promise<Array&lt;{ value: any, error: Error }&gt;&gt;</h4>
 					<ul>
 						<li>coll - can be Array, Object (dictionary), Iterable</li>
-						<li>parallelLimit - number of iteratee functions to be executed in parallel at any time</li>
-						<li>iteratee - the function that you define to process each item in &quot;coll&quot;</li>
+						<li>parallelLimit - number of iteratee functions to be executed in parallel at any time, set <code>parallelLimit = -1</code> for unlimited parallelization (all items will start process at once)</li>
+						<li>iteratee - the function that you define to process each item in &quot;coll&quot;<ul>
+								<li>if &quot;coll&quot; is array, it will call with (value, index) </li>
+								<li>if &quot;coll&quot; is object, it will call with (value, key)</li>
+							</ul>
+						</li>
 						<li>eachMaxTry - maximum number of times each item will be processed by &quot;iteratee&quot;.<ul>
-								<li>if eachMaxTry = 2, then the item will be retried 1 time when there is error throwed in the iteratee function</li>
+								<li>if <code>eachMaxTry = 2</code>, then the item will be retried 1 time when there is error throwed in the iteratee function</li>
 								<li>add delay before retry<ul>
-										<li>set eachMaxTry = { times: 2, interval: 1000 } // wait for 1000 ms before retry</li>
+										<li>set <code>eachMaxTry = { times: 2, interval: 1000 }</code> // wait for 1000 ms before retry</li>
 										<li>interval can also accept function returning the interval in ms<ul>
-												<li>e.g. eachMaxTry = { times: 2, interval: (retryCount) =&gt; retryCount * 1000 } // retryCount start from 2 which means it is the 2nd trial</li>
+												<li>e.g. <code>eachMaxTry = { times: 2, interval: (retryCount) =&gt; retryCount * 1000 }</code> // retryCount start from 2 which means it is the 2nd trial<h3 id="back_off_retry-strategies">BACK_OFF_RETRY strategies</h3>
+												</li>
 											</ul>
 										</li>
 									</ul>
 								</li>
-								<li>eachMaxTry follows the &quot;opts&quot; argument in <a href="https://caolan.github.io/async/docs.html#retry">https://caolan.github.io/async/docs.html#retry</a> &quot;retry&quot; <h3 id="back_off_retry-strategies">BACK_OFF_RETRY strategies</h3>
-								</li>
 							</ul>
 						</li>
 						<li>predefined interval function you may use<h4 id="back_off_retry-randombetween-minms-number-maxms-number-">BACK_OFF_RETRY.randomBetween(minMs: number, maxMs: number)</h4>
-							<h4 id="back_off_retry-exponential-">BACK_OFF_RETRY.exponential()</h4>
+						</li>
+						<li>e.g. <code>eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(100, 3000) }</code> // random delay between 100ms and 3000ms<h4 id="back_off_retry-exponential-">BACK_OFF_RETRY.exponential()</h4>
 						</li>
 						<li>start from 100ms, then 200ms, 400ms, 800ms, 1600ms, ...</li>
-						<li>e.g. eachMaxTry = { times: 5, interval: BACK_OFF_RETRY.randomBetween(100, 3000) } // random delay between 100ms and 3000ms</li>
 					</ul>
 					<p>(<a href="http://htmlpreview.github.io/?https://github.com/Donaldcwl/async-parallel-foreach/blob/master/docs/index.html">details api document in here</a>)</p>
 					<h2 id="usage">Usage</h2>
@@ -1026,7 +1038,21 @@ async <span class="hljs-keyword">function</span> processFoods(foods) {
   // }
 
   <span class="hljs-keyword">return</span> results
-}</code></pre>
+}</code></pre><h2 id="example">Example</h2>
+					<p>Please check the &quot;example&quot; folder in this repo</p>
+					<ul>
+						<li>How to run the example:<pre><code class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/Donaldcwl/async-parallel-foreach.git
+<span class="hljs-built_in">cd</span> async-parallel-foreach/example
+yarn install <span class="hljs-comment"># or npm install</span>
+node example.js</code></pre>
+						</li>
+					</ul>
+					<h3 id="todo-features">TODO FEATURES</h3>
+					<ul>
+						<li>get current status in the iteratee function e.g. currentTrial, isFirstTrial, isLastTrial, timeElapsed, failedReasons, incrementMaxTry</li>
+						<li>eachTrialTimeout, eachItemTimeout</li>
+						<li>run iteratee function in web worker for CPU intensive tasks (use tiny-worker for node.js)</li>
+					</ul>
 		</div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
@@ -1059,7 +1085,7 @@ async <span class="hljs-keyword">function</span> processFoods(foods) {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/358bd6c/src/async-parallel-foreach.ts#L3">async-parallel-foreach.ts:3</a></li>
+								<li>Defined in <a href="https://github.com/Donaldcwl/async-parallel-foreach/blob/41a4e78/src/async-parallel-foreach.ts#L3">async-parallel-foreach.ts:3</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
